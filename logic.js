@@ -27,6 +27,7 @@ if (speechSynthesis.onvoiceschanged !== undefined) {
 
 // Game state
 const stances = ['low', 'mid', 'high'];
+const attacks = ['light', 'heavy']
 let currentIndex = 0;
 let totalTransitions = 0;
 let isPaused = false;
@@ -44,31 +45,54 @@ const stopBtn = document.getElementById('stopBtn');
 const numTransitionsInput = document.getElementById('numTransitions');
 const delayInput = document.getElementById('delay');
 const frostMoonChance = document.getElementById('frost-moon-chance');
+const skillChance = document.getElementById('skill-chance');
 //const voiceSelect = document.getElementById('voice');
 const rateInput = document.getElementById('rate');
 
 function generateTransition() {
-    let from;
-    let frostMoon; 
+    /*
+    * Goal is to have variable training
+    * Low light -> low skill -> high heavy -> mid light -> frost moon
+    * Frost moons can END an expression, but aren't to be used in the middle
+    * Skills can be at any point in the expression
+    */
+    let from, to, frostMoon;
+    let commands = [];
     let expression = ``;
+    frostMoon = Math.random() < frostMoonChance.value / 100;
+    const calcSkill = () => Math.random() < skillChance.value / 100;
 
-    if(lastStance==''){
-        from = stances[Math.floor(Math.random() * stances.length)];
-        frostMoon = false;
+    // Initial state, there's no previous stance to choose from so it must be generated
+    from = lastStance;
+    if(lastStance === '') from = stances[Math.floor(Math.random() * stances.length)];
+
+    if(calcSkill()){
+        commands.push(`${from} skill`);
     }else{
-        from = lastStance;
-        frostMoon = Math.random() < frostMoonChance.value / 100;
+        commands.push(from)
     }
-
-    if(frostMoon){
-        return `${lastStance} to frost moon`
-    }
-
-    const to = stances[Math.floor(Math.random() * stances.length)];
-
-    expression = `${from} to ${to}`;
-    lastStance = to;
     
+    // Stance that the user must switch into
+    to = stances[Math.floor(Math.random() * stances.length)];
+
+    if(calcSkill()){
+        commands.push(`${to} skill`);
+    }else{
+        commands.push(to)
+    }
+
+    // Frost Moon Modifier, can only be used at the end of a sequence
+    if(frostMoon){
+        commands.push('frost moon');
+    }
+    lastStance = to;
+
+    commands.forEach((command, index) => {
+        expression += String(command);
+        if(index != commands.length - 1){
+            expression += ' to '
+        }    
+    })
     return expression; 
 }
 
