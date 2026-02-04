@@ -49,16 +49,27 @@ const rateInput = document.getElementById('rate');
 
 function generateTransition() {
     let from;
-    let frostMoon = Math.random() < frostMoonChance.value / 100;
+    let frostMoon; 
+    let expression = ``;
 
     if(lastStance==''){
         from = stances[Math.floor(Math.random() * stances.length)];
+        frostMoon = false;
     }else{
         from = lastStance;
+        frostMoon = Math.random() < frostMoonChance.value / 100;
     }
+
+    if(frostMoon){
+        return `${lastStance} to frost moon`
+    }
+
     const to = stances[Math.floor(Math.random() * stances.length)];
+
+    expression = `${from} to ${to}`;
     lastStance = to;
-    return `${from} to ${to}${frostMoon ? ' to frost moon' : ''}`;
+    
+    return expression; 
 }
 
 function speak(text) {
