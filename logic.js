@@ -32,6 +32,7 @@ let totalTransitions = 0;
 let isPaused = false;
 let isRunning = false;
 let timeoutId = null;
+let lastStance = '';
 
 // DOM elements
 const transitionEl = document.getElementById('transition');
@@ -46,8 +47,15 @@ const delayInput = document.getElementById('delay');
 const rateInput = document.getElementById('rate');
 
 function generateTransition() {
-    const from = stances[Math.floor(Math.random() * stances.length)];
+    let from;
+
+    if(lastStance==''){
+        from = stances[Math.floor(Math.random() * stances.length)];
+    }else{
+        from = lastStance;
+    }
     const to = stances[Math.floor(Math.random() * stances.length)];
+    lastStance = to;
     return `${from} to ${to}`;
 }
 
