@@ -46,6 +46,7 @@ const numTransitionsInput = document.getElementById('numTransitions');
 const delayInput = document.getElementById('delay');
 const frostMoonChance = document.getElementById('frost-moon-chance');
 const skillChance = document.getElementById('skill-chance');
+const attackChance = document.getElementById('attack-chance');
 //const voiceSelect = document.getElementById('voice');
 const rateInput = document.getElementById('rate');
 
@@ -56,35 +57,50 @@ function generateTransition() {
     * Frost moons can END an expression, but aren't to be used in the middle
     * Skills can be at any point in the expression
     */
+    const FROST_MOON_NAME = "Frost Moon";
+    const SKILL_NAME = "skill";
+
     let from, to, frostMoon;
+
     let commands = [];
     let expression = ``;
     frostMoon = Math.random() < frostMoonChance.value / 100;
-    const calcSkill = () => Math.random() < skillChance.value / 100;
+
+    const calcStance = (stance) => {
+        const skillProb = skillChance.value / 100;
+        const attackProb = attackChance.value / 100;
+
+        const skill = Math.random() < skillProb;
+        const attack = Math.random() < attackProb;
+
+        const attackType = attacks[Math.floor(Math.random() * attacks.length)]
+
+        if(skill && attack){
+            if (skillProb > attackProb){
+                return `${stance} ${SKILL_NAME}`
+            }else{
+                return `${stance} ${attackType}`
+            }
+        }
+
+        if(skill){
+            return `${stance} ${SKILL_NAME}`
+        }else if (attack){
+            return `${stance} ${attackType}`
+        }
+ 
+        return `${stance}`
+    }
 
     // Initial state, there's no previous stance to choose from so it must be generated
     from = lastStance;
     if(lastStance === '') from = stances[Math.floor(Math.random() * stances.length)];
-
-    if(calcSkill()){
-        commands.push(`${from} skill`);
-    }else{
-        commands.push(from)
-    }
-    
-    // Stance that the user must switch into
     to = stances[Math.floor(Math.random() * stances.length)];
 
-    if(calcSkill()){
-        commands.push(`${to} skill`);
-    }else{
-        commands.push(to)
-    }
+    commands.push(calcStance(from));
+    commands.push(calcStance(to));
+    if(frostMoon) commands.push(FROST_MOON_NAME);
 
-    // Frost Moon Modifier, can only be used at the end of a sequence
-    if(frostMoon){
-        commands.push('frost moon');
-    }
     lastStance = to;
 
     commands.forEach((command, index) => {
