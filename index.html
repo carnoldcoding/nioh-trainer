@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nioh 3 Stance Switching Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .settings {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #6c63ff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .display {
+            text-align: center;
+            margin: 30px 0;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .transition {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #6c63ff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
+        }
+
+        .counter {
+            font-size: 1.2em;
+            color: #aaa;
+        }
+
+        .status {
+            font-size: 1em;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #6c63ff 0%, #5a52d5 100%);
+            color: white;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #ffd93d 0%, #f5c842 100%);
+            color: #333;
+        }
+
+        .btn-pause:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 217, 61, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .transition {
+                font-size: 2em;
+            }
+
+            button {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚔️ Nioh 3 Stance Practice</h1>
+        <p class="subtitle">Master your stance switching</p>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label for="numTransitions">Number of Transitions:</label>
+                <input type="number" id="numTransitions" value="20" min="1" max="100">
+            </div>
+
+            <div class="setting-group">
+                <label for="delay">Delay Between Calls (seconds):</label>
+                <input type="number" id="delay" value="3" min="0.5" max="10" step="0.5">
+            </div>
+
+            <div class="setting-group">
+                <label for="voice">Voice:</label>
+                <select id="voice">
+                    <option value="">Default Voice</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label for="rate">Speech Rate:</label>
+                <input type="number" id="rate" value="1.0" min="0.5" max="2.0" step="0.1">
+            </div>
+        </div>
+
+        <div class="display">
+            <div class="transition" id="transition">Ready</div>
+            <div class="counter" id="counter">-</div>
+            <div class="status" id="status">Press Start to begin</div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-start" id="startBtn">Start</button>
+            <button class="btn-pause hidden" id="pauseBtn">Pause</button>
+            <button class="btn-stop hidden" id="stopBtn">Stop</button>
+        </div>
+    </div>
+
+    <script>
+        // Speech synthesis setup
+        const synth = window.speechSynthesis;
+        let voices = [];
+
+        // Load available voices
+        function loadVoices() {
+            voices = synth.getVoices();
+            const voiceSelect = document.getElementById('voice');
+            
+            // Clear existing options except the first one
+            voiceSelect.innerHTML = '<option value="">Default Voice</option>';
+            
+            voices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        // Load voices on page load and when they change
+        loadVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        // Game state
+        const stances = ['low', 'mid', 'high'];
+        let currentIndex = 0;
+        let totalTransitions = 0;
+        let isPaused = false;
+        let isRunning = false;
+        let timeoutId = null;
+
+        // DOM elements
+        const transitionEl = document.getElementById('transition');
+        const counterEl = document.getElementById('counter');
+        const statusEl = document.getElementById('status');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const numTransitionsInput = document.getElementById('numTransitions');
+        const delayInput = document.getElementById('delay');
+        const voiceSelect = document.getElementById('voice');
+        const rateInput = document.getElementById('rate');
+
+        function generateTransition() {
+            const from = stances[Math.floor(Math.random() * stances.length)];
+            const to = stances[Math.floor(Math.random() * stances.length)];
+            return `${from} to ${to}`;
+        }
+
+        function speak(text) {
+            // Cancel any ongoing speech
+            synth.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            // Set selected voice
+            const voiceIndex = voiceSelect.value;
+            if (voiceIndex !== '') {
+                utterance.voice = voices[voiceIndex];
+            }
+            
+            // Set speech rate
+            utterance.rate = parseFloat(rateInput.value);
+            
+            synth.speak(utterance);
+        }
+
+        function updateDisplay(transition) {
+            transitionEl.textContent = transition;
+            counterEl.textContent = `${currentIndex} / ${totalTransitions}`;
+        }
+
+        function countdown() {
+            let count = 3;
+            statusEl.textContent = 'Get ready...';
+            
+            const countInterval = setInterval(() => {
+                if (count > 0) {
+                    transitionEl.textContent = count;
+                    speak(count.toString());
+                    count--;
+                } else {
+                    clearInterval(countInterval);
+                    transitionEl.textContent = 'GO!';
+                    speak('Go');
+                    setTimeout(() => {
+                        runPractice();
+                    }, 1000);
+                }
+            }, 1000);
+        }
+
+        function runPractice() {
+            if (!isRunning || isPaused) return;
+
+            if (currentIndex >= totalTransitions) {
+                endPractice();
+                return;
+            }
+
+            currentIndex++;
+            const transition = generateTransition();
+            updateDisplay(transition);
+            speak(transition);
+            statusEl.textContent = 'Training...';
+
+            const delay = parseFloat(delayInput.value) * 1000;
+            timeoutId = setTimeout(runPractice, delay);
+        }
+
+        function startPractice() {
+            if (isRunning) return;
+
+            currentIndex = 0;
+            totalTransitions = parseInt(numTransitionsInput.value);
+            isRunning = true;
+            isPaused = false;
+
+            // Update UI
+            startBtn.classList.add('hidden');
+            pauseBtn.classList.remove('hidden');
+            stopBtn.classList.remove('hidden');
+            numTransitionsInput.disabled = true;
+            delayInput.disabled = true;
+            voiceSelect.disabled = true;
+            rateInput.disabled = true;
+
+            countdown();
+        }
+
+        function pausePractice() {
+            isPaused = !isPaused;
+            
+            if (isPaused) {
+                clearTimeout(timeoutId);
+                pauseBtn.textContent = 'Resume';
+                statusEl.textContent = 'Paused';
+                synth.cancel();
+            } else {
+                pauseBtn.textContent = 'Pause';
+                statusEl.textContent = 'Training...';
+                runPractice();
+            }
+        }
+
+        function stopPractice() {
+            isRunning = false;
+            isPaused = false;
+            clearTimeout(timeoutId);
+            synth.cancel();
+
+            // Reset UI
+            transitionEl.textContent = 'Stopped';
+            counterEl.textContent = '-';
+            statusEl.textContent = 'Press Start to begin';
+            startBtn.classList.remove('hidden');
+            pauseBtn.classList.add('hidden');
+            stopBtn.classList.add('hidden');
+            pauseBtn.textContent = 'Pause';
+            numTransitionsInput.disabled = false;
+            delayInput.disabled = false;
+            voiceSelect.disabled = false;
+            rateInput.disabled = false;
+        }
+
+        function endPractice() {
+            isRunning = false;
+            transitionEl.textContent = 'Complete!';
+            statusEl.textContent = 'Session finished';
+            speak('Session complete');
+
+            setTimeout(() => {
+                startBtn.classList.remove('hidden');
+                pauseBtn.classList.add('hidden');
+                stopBtn.classList.add('hidden');
+                pauseBtn.textContent = 'Pause';
+                numTransitionsInput.disabled = false;
+                delayInput.disabled = false;
+                voiceSelect.disabled = false;
+                rateInput.disabled = false;
+                transitionEl.textContent = 'Ready';
+                counterEl.textContent = '-';
+                statusEl.textContent = 'Press Start to begin';
+            }, 2000);
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startPractice);
+        pauseBtn.addEventListener('click', pausePractice);
+        stopBtn.addEventListener('click', stopPractice);
+    </script>
+</body>
+</html>
