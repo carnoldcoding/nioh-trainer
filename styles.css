@@ -32,6 +32,7 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.411);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.329);
+    overflow: hidden;
 }
 
 h1 {
@@ -48,11 +49,44 @@ h1 {
     font-size: 0.9em;
 }
 
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0);
+    backdrop-filter: blur(20px);
+    overflow-y: scroll;
+    display: none;
+}
+
 .settings {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 25px;
     border-radius: 12px;
     margin-bottom: 25px;
+    position: relative;
+
+    .settings-wrapper{
+        padding: 25px;
+    }
+
+    .close-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        position: sticky;
+        top: 0px; 
+        z-index: 10;
+        background: rgba(0,0,0,.8);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid rgba(255, 255, 255, .3);
+        padding: 10px;
+    }
+    
+    ion-icon {
+        font-size: 35px;
+        cursor: pointer;
+    }
 }
 
 header{
@@ -60,6 +94,22 @@ header{
     flex-direction: column;
     justify-items: center;
     align-items: center;
+
+    .cog-wrapper{
+        width: 100%;
+        display: flex;
+        justify-items: flex-end;
+    }
+
+    ion-icon{
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 45px;
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+
     img{
         object-fit: contain;
         height: auto;
@@ -106,7 +156,8 @@ select:focus {
     padding: 40px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    min-height: 150px;
+    height: 100%;
+    max-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
