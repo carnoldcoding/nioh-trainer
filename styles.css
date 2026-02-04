@@ -24,14 +24,14 @@ body {
 }
 
 .container {
-    background: #00000059;
+    background: #00000083;
     border-radius: 20px;
     padding: 40px;
     max-width: 600px;
     width: 100%;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.377);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.411);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.329);
 }
 
 h1 {
@@ -92,7 +92,7 @@ select:focus {
     text-align: center;
     margin: 30px 0;
     padding: 40px;
-    background: rgba(0, 0, 0, 0.295);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     min-height: 150px;
     display: flex;

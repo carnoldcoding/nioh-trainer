@@ -43,11 +43,13 @@ const pauseBtn = document.getElementById('pauseBtn');
 const stopBtn = document.getElementById('stopBtn');
 const numTransitionsInput = document.getElementById('numTransitions');
 const delayInput = document.getElementById('delay');
+const frostMoonChance = document.getElementById('frost-moon-chance');
 //const voiceSelect = document.getElementById('voice');
 const rateInput = document.getElementById('rate');
 
 function generateTransition() {
     let from;
+    let frostMoon = Math.random() < frostMoonChance.value / 100;
 
     if(lastStance==''){
         from = stances[Math.floor(Math.random() * stances.length)];
@@ -56,7 +58,7 @@ function generateTransition() {
     }
     const to = stances[Math.floor(Math.random() * stances.length)];
     lastStance = to;
-    return `${from} to ${to}`;
+    return `${from} to ${to}${frostMoon ? ' to frost moon' : ''}`;
 }
 
 function speak(text) {
